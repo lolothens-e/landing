@@ -1,0 +1,5 @@
+Descripción del problema:
+
+Actualmente, el negocio en cuestión se dedica a la venta de vestidos, pero enfrenta diversas dificultades relacionadas con la presentación de su catálogo de productos. La dueña del negocio utiliza WhatsApp como único medio para mostrar los vestidos, enviando fotos generadas por inteligencia artificial sin un orden claro ni información complementaria. Este método resulta poco práctico para los clientes, ya que deben revisar manualmente una gran cantidad de imágenes sin conocer detalles clave como el precio, las tallas disponibles, la calidad del producto o las condiciones de envío. Esta falta de organización y transparencia no solo genera desinterés en los posibles compradores, sino que también limita el alcance y profesionalismo del negocio.
+
+Queremos ayudar a resolver esta necesidad desarrollando una aplicación web y/o móvil que permita gestionar y visualizar un catálogo digital ordenado, atractivo y funcional, alineado con los objetivos de la materia de Desarrollo de Aplicaciones Web y Móviles.
