@@ -1,5 +1,6 @@
 "use strict";
 import { fetchFakerData } from './functions.js';
+import { saveVote, getVotes } from './firebase.js'; // Importa las funciones necesarias
 
 /**
  * Renderiza tarjetas con información de textos en el contenedor skeleton.
@@ -96,6 +97,77 @@ const showVideo = () => {
     }
 };
 
+/**
+ * Muestra los resultados de la votación en una tabla.
+ * @returns {Promise<void>}
+ */
+const displayVotes = async () => {
+    const resultsDiv = document.getElementById('results');
+    if (!resultsDiv) return;
+
+    const result = await getVotes();
+    if (!result.success || !result.data) {
+        resultsDiv.innerHTML = `<p class="text-gray-500 text-center mt-16">Resultado de la votación</p>`;
+        return;
+    }
+
+    // Contar votos por producto
+    const counts = {};
+    Object.values(result.data).forEach(vote => {
+        if (vote.productID) {
+            counts[vote.productID] = (counts[vote.productID] || 0) + 1;
+        }
+    });
+
+    // Crear tabla de resultados
+    let table = `
+        <table class="min-w-full text-center">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">Producto</th>
+                    <th class="px-4 py-2">Total de votos</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    Object.entries(counts).forEach(([product, total]) => {
+        table += `
+            <tr>
+                <td class="border px-4 py-2">${product}</td>
+                <td class="border px-4 py-2">${total}</td>
+            </tr>
+        `;
+    });
+    table += `
+            </tbody>
+        </table>
+    `;
+
+    resultsDiv.innerHTML = table;
+};
+
+/**
+ * Habilita el formulario de votación y gestiona el envío.
+ * @returns {void}
+ */
+const enableForm = () => {
+    const form = document.getElementById('form_voting');
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const select = document.getElementById('select_product');
+        if (!select) return;
+
+        const productID = select.value;
+        if (!productID) return;
+
+        await saveVote(productID);
+        form.reset();
+        displayVotes(); // Actualiza los resultados después de votar
+    });
+};
+
 // IIFE para inicializar la aplicación
 /**
  * Función autoejecutable que inicializa la aplicación.
@@ -108,4 +180,6 @@ const showVideo = () => {
     showToast();
     showVideo();
     loadData();
+    enableForm(); // Invoca la función para habilitar el formulario
+    displayVotes(); // Muestra los resultados al cargar la página
 })();
