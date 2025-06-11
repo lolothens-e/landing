@@ -1,5 +1,6 @@
 "use strict";
 import { fetchFakerData } from './functions.js';
+import { saveVote } from './firebase.js'; // Importa la función saveVote
 
 /**
  * Renderiza tarjetas con información de textos en el contenedor skeleton.
@@ -96,6 +97,27 @@ const showVideo = () => {
     }
 };
 
+/**
+ * Habilita el formulario de votación y gestiona el envío.
+ * @returns {void}
+ */
+const enableForm = () => {
+    const form = document.getElementById('form_voting');
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const select = document.getElementById('select_product');
+        if (!select) return;
+
+        const productID = select.value;
+        if (!productID) return;
+
+        await saveVote(productID);
+        form.reset();
+    });
+};
+
 // IIFE para inicializar la aplicación
 /**
  * Función autoejecutable que inicializa la aplicación.
@@ -108,4 +130,5 @@ const showVideo = () => {
     showToast();
     showVideo();
     loadData();
+    enableForm(); // Invoca la función para habilitar el formulario
 })();
